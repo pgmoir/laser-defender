@@ -2,11 +2,13 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
+	
 	public float speed = 7.5f;
 	public float padding = 0.5f;
 	public GameObject projectile;
 	public float projectileSpeed;
 	public float firingRate;
+	public float health;
 	
 	float xmin;
 	float xmax;
@@ -43,5 +45,17 @@ public class PlayerController : MonoBehaviour {
 		// restrict the player to the game space
 		float newX = Mathf.Clamp (transform.position.x, xmin, xmax);
 		transform.position = new Vector3 (newX, transform.position.y, transform.position.z);
+	}
+
+	void OnTriggerEnter2D(Collider2D collider) {
+		Debug.Log ("Hit");
+		Projectile missile = collider.gameObject.GetComponent<Projectile>();
+		if (missile) {
+			health -= missile.GetDamage();
+			missile.Hit();
+			if (health <= 0) {
+				Destroy(gameObject);
+			}
+		}
 	}
 }	
